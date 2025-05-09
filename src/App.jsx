@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import Loading from "./loading.jsx";
 import Title from "./Title.jsx";
+import Footer from "./Footer.jsx";
+import MyTree from "./Tree.jsx";
 
 const App = () => {
   const [inputValue, setInputValue] = useState("");
@@ -52,7 +54,7 @@ const App = () => {
 
   const handleShow = async (recipeType, searchType, bidirectional) => {
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     try {
       const response = await fetch(
         "http://localhost:3000/" + searchType + "/" + inputValue,
@@ -219,18 +221,14 @@ const App = () => {
                     transition: isDragging ? "none" : "transform 0.1s ease-out",
                   }}
                 >
-                  <img
-                    src={imageUrl}
-                    alt="API Result"
-                    className="pointer-events-none select-none"
-                    draggable={false}
-                  />
+                  <MyTree category={"Single"} type={"DFS"}/>
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
+      <Footer/>
     </main>
   );
 };

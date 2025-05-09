@@ -1,9 +1,9 @@
-import React from 'react';
 import Tree from 'react-d3-tree';
 import { useState, useEffect } from 'react';
+import Loading from './loading.jsx';
 
 const renderNode = ({ nodeDatum, toggleNode }) => {
-    const type = nodeDatum.attributes?.type;
+    const type = nodeDatum.attributes;
     const yOffset = type === 'recipe' ? 60 : 0;
 
     if (type === 'element') {
@@ -36,12 +36,15 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
     );
 };
 
-export default function MyTree() {
-    const [data, setData] = useState(null);   // State to store HTTP response
+export default function MyTree({ category, type }) {
+    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:8080/example-tree-data') // replace with your endpoint
+        setLoading(true);
+        const url = `http://localhost:8080/example-tree-data`;
+
+        fetch(url)
             .then(response => response.json())
             .then(json => {
                 setData(json);
@@ -51,9 +54,9 @@ export default function MyTree() {
                 console.error('Fetch error:', err);
                 setLoading(false);
             });
-    }, []); // empty dependency array = run once on mount
-    
-    if (loading) return <div>Loading...</div>;
+    }, [category, type]); // Refetch when either changes
+
+    if (loading) return <Loading />;
     if (!data) return <div>Error loading data.</div>;
 
     return (
