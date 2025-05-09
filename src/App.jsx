@@ -6,15 +6,15 @@ import MyTree from "./Tree.jsx";
 
 const App = () => {
   const [inputValue, setInputValue] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
   const [recipeType, setRecipeType] = useState("single");
   const [searchType, setSearchType] = useState("BFS");
-  const [isBidirectional, setIsBidirectional] = useState(false);
+  const [leftType, setLeftType] = useState("DFS");
+  const [rightType, setRightType] = useState("DFS");
 
   const image = import.meta.glob("/src/assets/elements/*.svg", {
     eager: true,
@@ -52,41 +52,14 @@ const App = () => {
     setIsDragging(false);
   };
 
-  const handleShow = async (recipeType, searchType, bidirectional) => {
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    try {
-      const response = await fetch(
-        "http://localhost:3000/" + searchType + "/" + inputValue,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            input: inputValue,
-            recipeType,
-            bidirectional,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      if (data.output) {
-        setImageUrl(data.output);
-      } else {
-        console.error("No output in response:", data);
-        setImageUrl("def.jpg");
-      }
-    } catch (error) {
-      setImageUrl("def.jpg");
-      console.error("API call failed:", error);
-    }
-    setLoading(false);
+  const handleShow = async () => {
+    setSearching(true);
   };
 
   const handleHide = () => {
-    setImageUrl("");
+    setSearching(false);
+    setPosition({ x: 0, y: 0 });
+    setScale(1);
   };
 
   return (
@@ -107,10 +80,10 @@ const App = () => {
             />
           </div>
           <div
-            className="flex overflow-x-auto gap-4 py-4 px-4 my-4"
+            className="flex overflow-x-auto gap-8 py-4 px-4 my-4"
             style={{
               scrollbarWidth: "thin", // For Firefox
-              scrollbarColor: "#0e4a63 #f5f5f5", // cyan-700 for thumb, slate-700 for track (in hex)
+              scrollbarColor: "#0891b2 #f5f5f5", // cyan-700 for thumb, slate-700 for track (in hex)
             }}
           >
             {elements.map((element) => (
@@ -118,10 +91,12 @@ const App = () => {
                 key={element}
                 src={image[`/src/assets/elements/${element}.svg`]}
                 alt={element}
-                className="w-28 h-28 rounded-lg border-2 border-slate-700 hover:border-cyan-300 bg-gradient-to-br from-slate-800 to-slate-700 shadow-md hover:shadow-cyan-500/30  p-4 object-cover cursor-pointer transition duration-300 ease-in-out"
-                onClick={() => {
-                  setInputValue(element);
-                }}
+                className="w-28 h-28 p-4 rounded-lg border-2 border-slate-700 
+                          hover:border-cyan-300 
+                          bg-gradient-to-br from-slate-800 to-slate-700 
+                          shadow-md hover:shadow-cyan-500/30 
+                          object-cover cursor-pointer transform hover:scale-125
+                          transition-colors duration-300 ease-in-out"
               />
             ))}
           </div>
@@ -174,31 +149,76 @@ const App = () => {
                 />
                 DFS
               </label>
+              <label className="flex items-center gap-4 text-white">
+                <input
+                  type="radio"
+                  className="scale-200 accent-white"
+                  name="search-type"
+                  value="Bidirectional"
+                  checked={searchType === "Bidirectional"}
+                  onChange={() => setSearchType("Bidirectional")}
+                />
+                Bidirectional
+              </label>
             </fieldset>
 
-            <label className="flex items-center gap-4 text-white">
-              <input
-                type="checkbox"
-                className="scale-200 accent-white"
-                name="bidirectional"
-                checked={isBidirectional}
-                onChange={(e) => setIsBidirectional(e.target.checked)}
-              />
-              Bidirectional
-            </label>
-
+            {searchType === "Bidirectional" && (
+              <fieldset className="flex gap-6 flex-wrap justify-center">
+                <label className="flex items-center gap-4 text-white">
+                  <input
+                    type="radio"
+                    className="scale-200 accent-white"
+                    name="left-type"
+                    value="DFS"
+                    checked={leftType === "DFS"}
+                    onChange={() => setLeftType("DFS")}
+                  />
+                  Left DFS
+                </label>
+                <label className="flex items-center gap-4 text-white">
+                  <input
+                    type="radio"
+                    className="scale-200 accent-white"
+                    name="left-type"
+                    value="BFS"
+                    checked={leftType === "BFS"}
+                    onChange={() => setLeftType("BFS")}
+                  />
+                  Left BFS
+                </label>
+                <label className="flex items-center gap-4 text-white">
+                  <input
+                    type="radio"
+                    className="scale-200 accent-white"
+                    name="right-type"
+                    value="DFS"
+                    checked={rightType === "DFS"}
+                    onChange={() => setRightType("DFS")}
+                  />
+                  Right DFS
+                </label>
+                <label className="flex items-center gap-4 text-white">
+                  <input
+                    type="radio"
+                    className="scale-200 accent-white"
+                    name="right-type"
+                    value="BFS"
+                    checked={rightType === "BFS"}
+                    onChange={() => setRightType("BFS")}
+                  />
+                  Right BFS
+                </label>
+              </fieldset>
+            )}
             <button
-              onClick={() =>
-                handleShow(recipeType, searchType, isBidirectional)
-              }
+              onClick={() => handleShow()}
               className="bg-black hover:bg-white hover:text-black text-white py-2 px-4 rounded transition ease-in-out duration-300"
             >
               Search
             </button>
           </div>
-          {loading && <Loading />}
-          {imageUrl && !loading && (
-            <div className="flex flex-col items-center mt-4 gap-4">
+          {searching && (
+            <div className="flex flex-col items-center mt-4 gap-4 ">
               <button
                 onClick={handleHide}
                 className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded ease-in-out duration-300"
@@ -207,7 +227,7 @@ const App = () => {
               </button>
 
               <div
-                className="w-[90vw] h-[70vh] overflow-hidden border rounded bg-white cursor-grab active:cursor-grabbing"
+                className="w-[90vw] h-[70vh] overflow-hidden flex items-center justify-center border rounded bg-transparent cursor-grab active:cursor-grabbing"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -221,14 +241,20 @@ const App = () => {
                     transition: isDragging ? "none" : "transform 0.1s ease-out",
                   }}
                 >
-                  <MyTree category={"Single"} type={"DFS"}/>
+                  <MyTree
+                    category={recipeType}
+                    searc={searchType}
+                    name={inputValue}
+                    left={leftType}
+                    right={rightType}
+                  />
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </main>
   );
 };

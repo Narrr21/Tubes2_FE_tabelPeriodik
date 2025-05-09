@@ -36,13 +36,18 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
     );
 };
 
-export default function MyTree({ category, type }) {
+export default function MyTree({ category, search, name, left, right }) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        var url;
         setLoading(true);
-        const url = `http://localhost:8080/example-tree-data`;
+        if (search == "Bidirectional") {
+            url = `http://localhost:8080/${category}/${search}/${name}?left=${left}&right=${right}`;
+        } else {
+            url = `http://localhost:8080/${category}/${search}/${name}`;
+        }
 
         fetch(url)
             .then(response => response.json())
@@ -54,13 +59,13 @@ export default function MyTree({ category, type }) {
                 console.error('Fetch error:', err);
                 setLoading(false);
             });
-    }, [category, type]); // Refetch when either changes
+    }, [category, search]); // Refetch when either changes
 
     if (loading) return <Loading />;
     if (!data) return <div>Error loading data.</div>;
 
     return (
-        <div style={{ width: '100vw', height: '100vh' }}>
+        <div style={{ width: '100vw'}}>
             <Tree
                 data={data}
                 orientation="vertical"
