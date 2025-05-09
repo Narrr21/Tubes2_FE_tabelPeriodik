@@ -5,13 +5,14 @@ import Footer from "./Footer.jsx";
 import MyTree from "./Tree.jsx";
 
 const App = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [elmtName, setElmtName] = useState("");
+  const [inputValue, setInputValue] = useState(1);
   const [searching, setSearching] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const [recipeType, setRecipeType] = useState("single");
+  const [live, setLive] = useState(0);
   const [searchType, setSearchType] = useState("BFS");
   const [leftType, setLeftType] = useState("DFS");
   const [rightType, setRightType] = useState("DFS");
@@ -74,8 +75,8 @@ const App = () => {
             <input
               className="bg-cyan-700 text-white p-2 rounded"
               type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={elmtName}
+              onChange={(e) => setElmtName(e.target.value)}
               placeholder="Enter element name"
             />
           </div>
@@ -103,26 +104,28 @@ const App = () => {
           <div className="flex flex-col items-center gap-4 py-3 border-4 rounded-2xl w-fit px-5 my-5">
             <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
+                Number of Recipes: 
                 <input
-                  type="radio"
-                  className="scale-200 accent-white"
-                  name="recipe-type"
-                  value="single"
-                  checked={recipeType === "single"}
-                  onChange={() => setRecipeType("single")}
+                  type="number"
+                  min={1}
+                  className="ml-4 p-2 rounded bg-slate-700 text-white w-24"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Minimal"
                 />
-                Single Recipe
               </label>
+            </fieldset>
+
+            <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
                 <input
-                  type="radio"
+                  type="checkbox"
                   className="scale-200 accent-white"
-                  name="recipe-type"
-                  value="multiple"
-                  checked={recipeType === "multiple"}
-                  onChange={() => setRecipeType("multiple")}
+                  name="live"
+                  checked={live}
+                  onChange={() => setLive((prev) => !prev)}
                 />
-                Multiple Recipe
+                Live Search
               </label>
             </fieldset>
 
@@ -242,11 +245,12 @@ const App = () => {
                   }}
                 >
                   <MyTree
-                    category={recipeType}
-                    searc={searchType}
-                    name={inputValue}
+                    search={searchType}
+                    name={elmtName}
+                    recipeAmount={inputValue}
                     left={leftType}
                     right={rightType}
+                    live={live}
                   />
                 </div>
               </div>

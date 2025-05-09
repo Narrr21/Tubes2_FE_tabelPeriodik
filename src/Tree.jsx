@@ -9,8 +9,8 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
     if (type === 'element') {
         return (
             <g onClick={toggleNode} transform={`translate(0, ${yOffset})`}>
-                <rect width={100} height={40} x={-50} y={-20} fill="lightblue" stroke="steelblue" rx={10} />
-                <text fill="black" x={0} y={5} textAnchor="middle" style={{ fontWeight: 'lighter' }}>
+                <rect width={250} height={80} x={-125} y={-40} fill="lightblue" stroke="steelblue" rx={10} />
+                <text fill="black" x={0} y={12} textAnchor="middle" fontWeight={'lighter'}>
                     {nodeDatum.name}
                 </text>
             </g>
@@ -36,20 +36,19 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
     );
 };
 
-export default function MyTree({ category, search, name, left, right }) {
+export default function MyTree({ search, name, recipeAmount, left, right, live }) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         var url;
         setLoading(true);
-        if (search == "Bidirectional") {
-            url = `http://localhost:8080/${category}/${search}/${name}?left=${left}&right=${right}`;
-        } else {
-            url = `http://localhost:8080/${category}/${search}/${name}`;
-        }
-
-        fetch(url)
+        url = `http://localhost:8080/${search}/${name}?recipeAmount=${recipeAmount}`;
+        if (search === "Bidirectional") {
+            url += `&left=${left}&right=${right}`;
+        } 
+        if (!live) {
+            fetch(url)
             .then(response => response.json())
             .then(json => {
                 setData(json);
@@ -59,13 +58,35 @@ export default function MyTree({ category, search, name, left, right }) {
                 console.error('Fetch error:', err);
                 setLoading(false);
             });
-    }, [category, search]); // Refetch when either changes
+        } else {
+            url = `http://localhost:8080/live-${search}/${name}?recipeAmount=${recipeAmount}`;
+            if (search === "Bidirectional") {
+                url += `&left=${left}&right=${right}`;
+            } 
+            const sse = new EventSource(url);
+            sse.onmessage = (e) => {
+                const payload = JSON.parse(e.data);
+                const exportData = payload.depth;
+                setData(exportData);
+                setLoading(false);
+              };
+
+            sse.onerror = (e) => {
+                console.error('SSE error:', e);
+                sse.close(); // Close the connection on error
+            }
+
+            return () => {
+                sse.close(); // Clean up the SSE connection on component unmount
+            };
+        }
+    }, [recipeAmount, search]); // Refetch when either changes
 
     if (loading) return <Loading />;
     if (!data) return <div>Error loading data.</div>;
 
     return (
-        <div style={{ width: '100vw'}}>
+        <div style={{ width: '100vw', height: '100vh' }}>
             <Tree
                 data={data}
                 orientation="vertical"
@@ -75,7 +96,7 @@ export default function MyTree({ category, search, name, left, right }) {
                 collapsible={false}
                 zoom={0.5}
                 pathFunc="elbow"
-                separation={{ siblings: 1, nonSiblings: 1.2 }}
+                separation={{ siblings: 2, nonSiblings: 2.4 }}
             />
         </div>
     );
