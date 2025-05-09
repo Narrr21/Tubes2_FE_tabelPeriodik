@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import Loading from "./loading.jsx";
+import Title from "./Title.jsx";
 
 const App = () => {
   const [inputValue, setInputValue] = useState("");
@@ -12,17 +14,15 @@ const App = () => {
   const [searchType, setSearchType] = useState("BFS");
   const [isBidirectional, setIsBidirectional] = useState(false);
 
-  const image = import.meta.glob("/public/elements/*.svg", {
+  const image = import.meta.glob("/src/assets/elements/*.svg", {
     eager: true,
     import: "default",
-    query: "?url",
   });
-  const elements = [];
-  for (const path in image) {
-    const fileName = path.split("/").pop();
-    const elementName = fileName.split(".")[0];
-    elements.push(elementName);
-  }
+
+  const elements = Object.keys(image).map((path) => {
+    const name = path.split("/").pop().split(".")[0];
+    return name;
+  });
 
   const handleWheel = (e) => {
     e.preventDefault();
@@ -52,6 +52,7 @@ const App = () => {
 
   const handleShow = async (recipeType, searchType, bidirectional) => {
     setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     try {
       const response = await fetch(
         "http://localhost:3000/" + searchType + "/" + inputValue,
@@ -89,36 +90,40 @@ const App = () => {
   return (
     <main className="min-h-screen flex-col items-center justify-center self-center text-4xl py-5 w-screen">
       <div className="py-3 justify-center">
-        <h1 className="bg-green-400 text-4xl font-bold text-center py-1">
-          Tabel Periodik
-        </h1>
-        <div className="flex flex-col">
-          <h2 className="text-3xl font-bold text-center py-1">
+        <Title />
+        <div className="flex flex-col align-center justify-center items-center mt-5">
+          <h2 className="text-3xl font-bold text-center py-1 my-2">
             Pilih Elemen yang ingin ditampilkan
           </h2>
           <div className="flex items-center justify-center">
             <input
-              className="bg-blue-400 text-black p-2 rounded"
+              className="bg-cyan-700 text-white p-2 rounded"
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Enter element name"
             />
           </div>
-          <div className="flex overflow-x-auto gap-4 py-4 px-4">
+          <div
+            className="flex overflow-x-auto gap-4 py-4 px-4 my-4"
+            style={{
+              scrollbarWidth: "thin", // For Firefox
+              scrollbarColor: "#0e4a63 #f5f5f5", // cyan-700 for thumb, slate-700 for track (in hex)
+            }}
+          >
             {elements.map((element) => (
               <img
                 key={element}
-                src={`/elements/${element}.svg`}
+                src={image[`/src/assets/elements/${element}.svg`]}
                 alt={element}
-                className="w-24 h-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-white transition duration-300 ease-in-out"
+                className="w-28 h-28 rounded-lg border-2 border-slate-700 hover:border-cyan-300 bg-gradient-to-br from-slate-800 to-slate-700 shadow-md hover:shadow-cyan-500/30  p-4 object-cover cursor-pointer transition duration-300 ease-in-out"
                 onClick={() => {
                   setInputValue(element);
                 }}
               />
             ))}
           </div>
-          <div className="flex flex-col items-center gap-4 py-3">
+          <div className="flex flex-col items-center gap-4 py-3 border-4 rounded-2xl w-fit px-5 my-5">
             <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
                 <input
@@ -189,7 +194,7 @@ const App = () => {
               Search
             </button>
           </div>
-          {loading && <p className="text-white text-center">Loading...</p>}
+          {loading && <Loading />}
           {imageUrl && !loading && (
             <div className="flex flex-col items-center mt-4 gap-4">
               <button
