@@ -64,11 +64,11 @@ const App = () => {
   };
 
   return (
-    <main className="min-h-screen flex-col items-center justify-center self-center text-4xl py-5 w-screen">
+    <main className="min-h-screen flex-col items-center justify-center self-center text-4xl py-5 w-screen bg-slate-800">
       <div className="py-3 justify-center">
         <Title />
         <div className="flex flex-col align-center justify-center items-center mt-5">
-          <h2 className="text-3xl font-bold text-center py-1 my-2">
+          <h2 className="text-3xl font-bold text-center text-white py-1 my-2">
             Pilih Elemen yang ingin ditampilkan
           </h2>
           <div className="flex items-center justify-center">
@@ -214,14 +214,14 @@ const App = () => {
               </fieldset>
             )}
             <button
-              onClick={() => handleShow()}
-              className="bg-black hover:bg-white hover:text-black text-white py-2 px-4 rounded transition ease-in-out duration-300"
+              onClick={handleShow}
+              className="py-2 px-4 rounded bg-cyan-700 hover:bg-cyan-800 text-white transition duration-300"
             >
               Search
             </button>
           </div>
           {searching && (
-            <div className="flex flex-col items-center mt-4 gap-4 ">
+            <div className="flex flex-col items-center bg-white mt-4 gap-4 ">
               <button
                 onClick={handleHide}
                 className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded ease-in-out duration-300"
@@ -230,7 +230,7 @@ const App = () => {
               </button>
 
               <div
-                className="w-[90vw] h-[70vh] overflow-hidden flex items-center justify-center border rounded bg-transparent cursor-grab active:cursor-grabbing"
+                className="w-[90vw] h-[70vh] overflow-hidden flex items-center justify-center border rounded cursor-grab active:cursor-grabbing"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}

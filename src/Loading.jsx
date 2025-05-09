@@ -28,7 +28,7 @@ export default function Loading() {
           el ? (
             <div
               key={idx}
-              className="w-10 h-10 border border-white rounded flex items-center justify-center text-white text-xs font-bold animate-tile"
+              className="w-10 h-10 border border-black rounded flex items-center justify-center text-black text-xs font-bold animate-tile"
               style={{ animationDelay: `${idx * 0.02}s` }}
             >
               {el}
