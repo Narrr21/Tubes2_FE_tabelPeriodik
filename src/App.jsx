@@ -221,16 +221,16 @@ const App = () => {
             </button>
           </div>
           {searching && (
-            <div className="flex flex-col items-center bg-white mt-4 gap-4 ">
+            <div className="flex flex-col items-center mt-4 gap-4 ">
               <button
                 onClick={handleHide}
-                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded ease-in-out duration-300"
+                className="bg-red-600 hover:bg-red-700 text-black py-2 px-4 rounded ease-in-out duration-300"
               >
                 Remove
               </button>
 
               <div
-                className="w-[90vw] h-[70vh] overflow-hidden flex items-center justify-center border rounded cursor-grab active:cursor-grabbing"
+                className="w-[90vw] h-[70vh]  bg-white overflow-hidden flex items-center justify-center border rounded cursor-grab active:cursor-grabbing"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
