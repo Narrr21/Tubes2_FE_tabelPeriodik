@@ -54,7 +54,12 @@ const App = () => {
   };
 
   const handleShow = async () => {
-    setSearching(true);
+    setSearching(false);
+    setPosition({ x: 0, y: 0 });
+    setScale(1);
+    setTimeout(() => {
+      setSearching(true);
+    }, 0);
   };
 
   const handleHide = () => {
@@ -91,6 +96,9 @@ const App = () => {
               <img
                 key={element}
                 src={image[`/src/assets/elements/${element}.svg`]}
+                onClick={() => {
+                  setElmtName(element);
+                }}
                 alt={element}
                 className="w-28 h-28 p-4 rounded-lg border-2 border-slate-700 
                           hover:border-cyan-300 
@@ -224,13 +232,13 @@ const App = () => {
             <div className="flex flex-col items-center mt-4 gap-4 ">
               <button
                 onClick={handleHide}
-                className="bg-red-600 hover:bg-red-700 text-black py-2 px-4 rounded ease-in-out duration-300"
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded ease-in-out duration-300"
               >
                 Remove
               </button>
 
               <div
-                className="w-[90vw] h-[70vh]  bg-white overflow-hidden flex items-center justify-center border rounded cursor-grab active:cursor-grabbing"
+                className="w-[90vw] h-[70vh]  bg-cyan-500 overflow-hidden flex items-center justify-center border rounded cursor-grab active:cursor-grabbing"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
