@@ -7,13 +7,13 @@ import MyTree from "./Tree.jsx";
 const App = () => {
   const [elmtName, setElmtName] = useState("");
   const [inputValue, setInputValue] = useState(1);
-  const [Delay, setDelay] = useState(0);
+  const [Delay, setDelay] = useState(1);
   const [searching, setSearching] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const [live, setLive] = useState(0);
+  const [live, setLive] = useState(false);
   const [searchType, setSearchType] = useState("BFS");
   const [leftType, setLeftType] = useState("DFS");
   const [rightType, setRightType] = useState("DFS");
