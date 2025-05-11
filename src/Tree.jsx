@@ -10,15 +10,15 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
 
   if (type === "element") {
     return (
-        <g onClick={toggleNode} transform={`translate(0, ${yOffset})`}>
+      <g onClick={toggleNode} transform={`translate(0, ${yOffset})`}>
         {hasMultipleChildren ? (
-            <polygon
+          <polygon
             points="0,-50 140.5,0 0,50 -140.5,0"
             fill="lightblue"
             stroke="steelblue"
-            />
+          />
         ) : (
-            <rect
+          <rect
             width={250}
             height={80}
             x={-125}
@@ -26,33 +26,33 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
             fill="lightblue"
             stroke="steelblue"
             rx={10}
-            />
+          />
         )}
 
         {/* Node name */}
         <text
-            fill="black"
-            x={0}
-            y={-10}
-            textAnchor="middle"
-            fontWeight="lighter"
+          fill="black"
+          x={0}
+          y={-10}
+          textAnchor="middle"
+          fontWeight="lighter"
         >
-            {nodeDatum.name}
+          {nodeDatum.name}
         </text>
 
         {/* Children count */}
         {hasMultipleChildren && (
-            <text
+          <text
             fill="black"
             x={0}
             y={30}
             textAnchor="middle"
             fontWeight="lighter"
-            >
+          >
             {nodeDatum.children.length}
-            </text>
+          </text>
         )}
-        </g>
+      </g>
     );
   } else if (type === "recipe") {
     return (
@@ -81,6 +81,7 @@ export default function MyTree({
   left,
   right,
   live,
+  delay,
 }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -88,7 +89,7 @@ export default function MyTree({
   useEffect(() => {
     var url;
     setLoading(true);
-    url = `http://localhost:8080/${search}/${name}?recipeAmount=${recipeAmount}`;
+    url = `http://localhost:8080/${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
     if (search === "Bidirectional") {
       url += `&left=${left}&right=${right}`;
     }
@@ -104,7 +105,7 @@ export default function MyTree({
           setLoading(false);
         });
     } else {
-      url = `http://localhost:8080/live-${search}/${name}?recipeAmount=${recipeAmount}`;
+      url = `http://localhost:8080/live-${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
       if (search === "Bidirectional") {
         url += `&left=${left}&right=${right}`;
       }

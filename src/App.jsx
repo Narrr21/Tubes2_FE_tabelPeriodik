@@ -7,6 +7,7 @@ import MyTree from "./Tree.jsx";
 const App = () => {
   const [elmtName, setElmtName] = useState("");
   const [inputValue, setInputValue] = useState(1);
+  const [Delay, setDelay] = useState(0);
   const [searching, setSearching] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -109,10 +110,10 @@ const App = () => {
               />
             ))}
           </div>
-          <div className="flex flex-col items-center gap-4 py-3 border-4 rounded-2xl w-fit px-5 my-5">
+          <div className="flex flex-col items-center gap-4 py-3 border-4 rounded-2xl w-[40vw] px-5 my-5">
             <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
-                Number of Recipes: 
+                Number of Recipes:
                 <input
                   type="number"
                   min={1}
@@ -136,6 +137,21 @@ const App = () => {
                 Live Search
               </label>
             </fieldset>
+            {live && (
+              <fieldset className="flex gap-6 flex-wrap justify-center">
+                <label>
+                  Delay (ms) :
+                  <input
+                    type="number"
+                    min={1}
+                    className="ml-4 p-2 rounded bg-slate-700 text-white w-24"
+                    value={Delay}
+                    onChange={(e) => setDelay(e.target.value)}
+                    placeholder="Minimal"
+                  />
+                </label>
+              </fieldset>
+            )}
 
             <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
@@ -259,6 +275,7 @@ const App = () => {
                     left={leftType}
                     right={rightType}
                     live={live}
+                    delay={Delay}
                   />
                 </div>
               </div>
