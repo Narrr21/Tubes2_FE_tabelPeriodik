@@ -3,10 +3,19 @@ import { useState, useEffect } from "react";
 import Loading from "./loading.jsx";
 
 const renderNode = ({ nodeDatum, toggleNode }) => {
-  const type = nodeDatum.attributes;
+  if (nodeDatum.name === "") {
+    return <text fill="black" x={0} y={5}>Loading...</text>;
+  }
+  const type = nodeDatum.attributes.Type;
   const hasMultipleChildren =
     nodeDatum.children && nodeDatum.children.length > 1;
   const yOffset = type === "recipe" ? 60 : 0;
+  const isLeft = nodeDatum.attributes.Side === "Left";
+
+  // Define colors based on isLeft value
+  const fillColor = isLeft ? "cyan" : "white";
+  const strokeColor = isLeft ? "steelblue" : "steelblue";
+  const textColor = isLeft ? "black" : "black";
 
   if (type === "element") {
     return (
@@ -14,8 +23,8 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
         {hasMultipleChildren ? (
           <polygon
             points="0,-50 140.5,0 0,50 -140.5,0"
-            fill="lightblue"
-            stroke="steelblue"
+            fill={fillColor}
+            stroke={strokeColor}
           />
         ) : (
           <rect
@@ -23,15 +32,15 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
             height={80}
             x={-125}
             y={-40}
-            fill="lightblue"
-            stroke="steelblue"
+            fill={fillColor}
+            stroke={strokeColor}
             rx={10}
           />
         )}
 
         {/* Node name */}
         <text
-          fill="black"
+          fill={textColor}
           x={0}
           y={-10}
           textAnchor="middle"
@@ -43,7 +52,7 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
         {/* Children count */}
         {hasMultipleChildren && (
           <text
-            fill="black"
+            fill={textColor}
             x={0}
             y={30}
             textAnchor="middle"
@@ -57,8 +66,8 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
   } else if (type === "recipe") {
     return (
       <g onClick={toggleNode} transform={`translate(0, ${yOffset})`}>
-        <circle r={10} stroke="black" />
-        <text fill="black" x={0} y={5} textAnchor="middle">
+        <circle r={10} stroke={strokeColor} fill={isLeft ? "black" : "white"} />
+        <text fill={textColor} x={0} y={5} textAnchor="middle">
           {nodeDatum.name}
         </text>
       </g>
@@ -67,7 +76,7 @@ const renderNode = ({ nodeDatum, toggleNode }) => {
 
   return (
     <g onClick={toggleNode}>
-      <text fill="black" x={0} y={5}>
+      <text fill={textColor} x={0} y={5}>
         {nodeDatum.name}
       </text>
     </g>
@@ -85,6 +94,8 @@ export default function MyTree({
 }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  console.log("Data:", data);
 
   useEffect(() => {
     var url;
