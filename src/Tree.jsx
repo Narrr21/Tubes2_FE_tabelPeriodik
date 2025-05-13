@@ -1,6 +1,6 @@
 import Tree from "react-d3-tree";
 import { useState, useEffect } from "react";
-import Loading from "./loading.jsx";
+import Loading from "./Loading.jsx";
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const renderNode = ({ nodeDatum, toggleNode }) => {

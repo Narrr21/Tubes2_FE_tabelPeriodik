@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import Loading from "./loading.jsx";
+import Loading from "./Loading.jsx";
 import Title from "./Title.jsx";
 import Footer from "./Footer.jsx";
 import MyTree from "./Tree.jsx";
