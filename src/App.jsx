@@ -72,7 +72,7 @@ const App = () => {
   };
 
   return (
-    <main className="min-h-screen flex-col items-center justify-center self-center text-4xl py-5 w-screen bg-slate-800">
+    <main className="min-h-screen max-w-screen flex-col items-center justify-center self-center text-4xl py-5 w-screen bg-slate-800">
       <div className="py-3 justify-center">
         <Title />
         <div className="flex flex-col align-center justify-center items-center mt-5">
@@ -89,7 +89,7 @@ const App = () => {
             />
           </div>
           <div
-            className="flex overflow-x-auto gap-8 py-4 px-4 my-4"
+            className="flex overflow-x-auto max-w-screen gap-8 py-4 px-4 my-4"
             style={{
               scrollbarWidth: "thin", // For Firefox
               scrollbarColor: "#0891b2 #f5f5f5", // cyan-700 for thumb, slate-700 for track (in hex)
@@ -101,12 +101,12 @@ const App = () => {
               return (
                 <img
                   key={element}
-                  src={imageMap[element] || '/def.svg'} // Relative path to public folder
+                  src={'/question.svg'} // Relative path to public folder
                   onClick={() => setElmtName(element)}
                   alt={element}
                   className="w-28 h-28 p-4 rounded-lg border-2 border-slate-700 
                             hover:border-cyan-300 
-                            bg-gradient-to-br from-slate-800 to-slate-700 
+                            bg-gradient-to-br from-cyan-800 to-slate-500 
                             shadow-md hover:shadow-cyan-500/30 
                             object-cover cursor-pointer transform hover:scale-125
                             transition-colors duration-300 ease-in-out"
