@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import Loading from "./loading.jsx";
 import Title from "./Title.jsx";
 import Footer from "./Footer.jsx";
@@ -17,16 +17,18 @@ const App = () => {
   const [searchType, setSearchType] = useState("BFS");
   const [leftType, setLeftType] = useState("DFS");
   const [rightType, setRightType] = useState("DFS");
+  const [elements, setElements] = useState([]); // or your source of names
+  const [imageMap, setImageMap] = useState({});
 
-  const image = import.meta.glob("/src/assets/elements/*.svg", {
-    eager: true,
-    import: "default",
-  });
-
-  const elements = Object.keys(image).map((path) => {
-    const name = path.split("/").pop().split(".")[0];
-    return name;
-  });
+  useEffect(() => {
+    fetch("http://localhost:8080/image")
+      .then((res) => res.json())
+      .then((data) => {
+        setImageMap(data);
+        setElements(Object.keys(data)); // Populate names from keys
+      })
+      .catch((err) => console.error("Failed to fetch image map:", err));
+  }, []);
 
   const handleWheel = (e) => {
     e.preventDefault();
@@ -93,22 +95,24 @@ const App = () => {
               scrollbarColor: "#0891b2 #f5f5f5", // cyan-700 for thumb, slate-700 for track (in hex)
             }}
           >
-            {elements.map((element) => (
-              <img
-                key={element}
-                src={image[`/src/assets/elements/${element}.svg`]}
-                onClick={() => {
-                  setElmtName(element);
-                }}
-                alt={element}
-                className="w-28 h-28 p-4 rounded-lg border-2 border-slate-700 
-                          hover:border-cyan-300 
-                          bg-gradient-to-br from-slate-800 to-slate-700 
-                          shadow-md hover:shadow-cyan-500/30 
-                          object-cover cursor-pointer transform hover:scale-125
-                          transition-colors duration-300 ease-in-out"
-              />
-            ))}
+            {elements.map((element) => {
+              console.log("Rendering element:", element, "| Image URL:", imageMap[element]);
+
+              return (
+                <img
+                  key={element}
+                  src={imageMap[element] || '/def.svg'} // Relative path to public folder
+                  onClick={() => setElmtName(element)}
+                  alt={element}
+                  className="w-28 h-28 p-4 rounded-lg border-2 border-slate-700 
+                            hover:border-cyan-300 
+                            bg-gradient-to-br from-slate-800 to-slate-700 
+                            shadow-md hover:shadow-cyan-500/30 
+                            object-cover cursor-pointer transform hover:scale-125
+                            transition-colors duration-300 ease-in-out"
+                />
+              );
+            })}
           </div>
           <div className="flex flex-col items-center gap-4 py-3 border-4 rounded-2xl w-[40vw] px-5 my-5">
             <fieldset className="flex gap-6 flex-wrap justify-center">
@@ -124,35 +128,38 @@ const App = () => {
                 />
               </label>
             </fieldset>
+              {searchType !== "Bidirectional" && (
+                <>
+                  <fieldset className="flex gap-6 flex-wrap justify-center">
+                    <label className="flex items-center gap-4 text-white">
+                      <input
+                        type="checkbox"
+                        className="scale-200 accent-white"
+                        name="live"
+                        checked={live}
+                        onChange={() => setLive((prev) => !prev)}
+                      />
+                      Live Search
+                    </label>
+                  </fieldset>
 
-            <fieldset className="flex gap-6 flex-wrap justify-center">
-              <label className="flex items-center gap-4 text-white">
-                <input
-                  type="checkbox"
-                  className="scale-200 accent-white"
-                  name="live"
-                  checked={live}
-                  onChange={() => setLive((prev) => !prev)}
-                />
-                Live Search
-              </label>
-            </fieldset>
-            {live && (
-              <fieldset className="flex gap-6 flex-wrap justify-center">
-                <label>
-                  Delay (ms) :
-                  <input
-                    type="number"
-                    min={1}
-                    className="ml-4 p-2 rounded bg-slate-700 text-white w-24"
-                    value={Delay}
-                    onChange={(e) => setDelay(e.target.value)}
-                    placeholder="Minimal"
-                  />
-                </label>
-              </fieldset>
-            )}
-
+                  {live && (
+                    <fieldset className="flex gap-6 flex-wrap justify-center">
+                      <label>
+                        Delay (ms) :
+                        <input
+                          type="number"
+                          min={1}
+                          className="ml-4 p-2 rounded bg-slate-700 text-white w-24"
+                          value={Delay}
+                          onChange={(e) => setDelay(e.target.value)}
+                          placeholder="Minimal"
+                        />
+                      </label>
+                    </fieldset>
+                  )}
+                </>
+              )}
             <fieldset className="flex gap-6 flex-wrap justify-center">
               <label className="flex items-center gap-4 text-white">
                 <input
@@ -183,7 +190,10 @@ const App = () => {
                   name="search-type"
                   value="Bidirectional"
                   checked={searchType === "Bidirectional"}
-                  onChange={() => setSearchType("Bidirectional")}
+                  onChange={() => {
+                    setSearchType("Bidirectional");
+                    setLive(false);
+                  }}
                 />
                 Bidirectional
               </label>
