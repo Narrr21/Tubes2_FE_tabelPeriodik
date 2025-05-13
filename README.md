@@ -1,59 +1,65 @@
-# Vite + Tailwind CSS v4 Starter
+# 🔬 Tubes2_FE_tabelPeriodik
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sebuah web interaktif untuk mencari resep elemen dalam game **Little Alchemy 2** yang berdasarkan input dari pengguna. Web ini memungkinkan pengguna untuk menemukan kombinasi bahan-bahan untuk menciptakan suatu elemen, menggunakan berbagai metode pencarian seperti **DFS**, **BFS**, dan **Bidirectional Search**.
 
-Currently, two official plugins are available:
+## ✨ Fitur
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 **Pencarian Resep**  
+  Masukkan nama elemen yang ingin kamu buat bisa 1 atau banyak resep, dan web akan menampilkan resepnya berdasarkan elemen-elemen dasar.
 
-## Expanding the ESLint configuration
+- 🧭 **Metode Pencarian**  
+  Tersedia beberapa algoritma pencarian:
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+  - **Depth-First Search (DFS)**
+    Metode yang mencari element di sisi kiri tree terlebih dahulu hingga dead-end dan melakukan backtrack
+  - **Breadth-First Search (BFS)**
+    Metode yang mencari element secara merata di suatu tier terlebih dahulu kemudian turun ke tier selanjutnya
+  - **Bidirectional Search** 
+    (**Left** adalah pencarian dari elemen dasar ke tujuan (ditandai warna **Biru**), **Right** sebaliknya (**Putih**))
 
-A fast and optimized setup using Vite with Tailwind CSS v4.
+- ⚡ **Live Update Mode**  
+  Menampilkan proses pencarian secara real-time dengan kecepatan yang bisa diatur sesuai preferensi pengguna.
 
-## 📌 Features
+## 🛠️ Teknologi
 
-- ⚡️ Vite for instant builds and hot reloading
-- 🎨 Tailwind CSS v4 for modern styling
-- 🔧 Pre-configured for quick setup
-- 🌍 Local server runs at `http://localhost:3000/` and opens automatically
+- ⚛️ **React.js** dengan [Vite](https://vitejs.dev/)
+- 🎨 **Tailwind CSS** untuk styling
+- 🐳 **Docker** untuk containerization
 
-## 🛠 Installation & Usage
+## 🚀 Cara Menjalankan
 
-### 2️⃣ Initialize the Project
+### 1. Clone Repository
 
-npm init
+```bash
+git clone https://github.com/Narrr21/Tubes2_FE_tabelPeriodik.git
+cd Tubes2_FE_tabelPeriodik
+```
 
-### 3️⃣ Install Dependencies
+### 2. Jalankan dengan Docker
 
-npm install
+Pastikan Docker sudah terinstal.
 
-### 4️⃣ Start Development Server
+```bash
+docker build -t littlealchemy-fe .
+docker run -p 8080:3000 littlealchemy-fe
+```
 
-npm run dev
+## 📁 Struktur Direktori Utama
 
-✅ This will start the server at http://localhost:3000/ and open it automatically in your browser.
+```
+├── public/             # Asset statis
+├── src/                # Kode sumber utama
+│ └── assets/           # Asset SVG
+├── .env                # Variabel lingkungan
+├── Dockerfile          # Konfigurasi Docker
+├── README.md           # Dokumentasi ini
+├── eslint.config.js    # Konfigurasi ESLint
+├── index.html          # Template HTML utama
+├── package-lock.json   # Lockfile npm
+├── package.json        # Konfigurasi dependensi proyek
+└── vite.config.js      # Konfigurasi Vite
+```
 
-### File Structure
+## 📸 Tampilan Antarmuka
 
-vite-tailwind-template/
-│── src/
-│ ├── index.css
-│ ├── main.jsx
-│ ├── App.css
-│ ├── App.jsx
-│ ├── index.html
-│── public/
-│── vite.config.js
-│── eslint.config.js
-│── index.html
-│── package.json
-│── package-lock.json
-│── README.md
-
-### Author
-
-Created by Aidan Kayanja
-www.aidankayanja.xyz
+![Alt text](public/image.png)
