@@ -1,6 +1,7 @@
 import Tree from "react-d3-tree";
 import { useState, useEffect } from "react";
 import Loading from "./loading.jsx";
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const renderNode = ({ nodeDatum, toggleNode }) => {
   if (nodeDatum.name === "") {
@@ -100,7 +101,8 @@ export default function MyTree({
   useEffect(() => {
     var url;
     setLoading(true);
-    url = `http://localhost:8080/${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
+    url = `${apiUrl}/${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
+    console.log("URL:", url);
     if (search === "Bidirectional") {
       url += `&left=${left}&right=${right}`;
     }
@@ -116,7 +118,7 @@ export default function MyTree({
           setLoading(false);
         });
     } else {
-      url = `http://localhost:8080/live-${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
+      url = `${apiUrl}/live-${search}/${name}?recipeAmount=${recipeAmount}&delay=${delay}`;
       if (search === "Bidirectional") {
         url += `&left=${left}&right=${right}`;
       }
