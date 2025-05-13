@@ -63,3 +63,8 @@ docker run -p 8080:3000 littlealchemy-fe
 ## 📸 Tampilan Antarmuka
 
 ![Alt text](public/image.png)
+
+## Author
+- 13523030 Julius Arthur
+- 13523076 Nadhif Al Rozin
+- 13523083 David Bakti Lodianto
